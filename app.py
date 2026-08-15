@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import random
 
 # Configuración de la página
 st.set_page_config(
@@ -25,6 +24,23 @@ if "show_translation" not in st.session_state:
 st.title("💼 English Platform for Professional Accountants & Auditors")
 st.markdown("### Domina el inglés nivel B3+ basado en las guías técnicas esenciales para contadores y auditores.")
 
+# Base de datos de Flashcards
+flashcards_db = [
+    {"category": "Linking Words", "term": "Furthermore / Moreover", "translation": "Además / Es más (Adición formal en informes)"},
+    {"category": "Linking Words", "term": "Nevertheless / Nonetheless", "translation": "No obstante / Sin embargo (Contraste)"},
+    {"category": "Linking Words", "term": "Consequently / Therefore", "translation": "Por consiguiente / Por lo tanto (Causa-Efecto)"},
+    {"category": "Linking Words", "term": "In light of", "translation": "A la luz de / En vista de (Análisis de hallazgos)"},
+    {"category": "Modal Verbs", "term": "Must", "translation": "Obligación estricta / Cumplimiento normativo (IFRS/GAAP)"},
+    {"category": "Modal Verbs", "term": "Should", "translation": "Recomendación / Consejo en control interno"},
+    {"category": "Auxiliary", "term": "Have you finalized...?", "translation": "¿Has finalizado...? (Present Perfect en auditoría)"},
+    {"category": "Core Verbs", "term": "To disclose", "translation": "Revelar / Divulgar información financiera"},
+    {"category": "Core Verbs", "term": "To comply with", "translation": "Cumplir con regulaciones o leyes fiscales"}
+]
+
+# Validación de seguridad para evitar IndexError si cambia el tamaño de la lista
+if st.session_state.flashcard_idx >= len(flashcards_db):
+    st.session_state.flashcard_idx = 0
+
 # Menú Principal por Pestañas (Estructura de Curso Profesional)
 tabs = st.tabs([
     "⚡ Flashcards Clave",
@@ -41,18 +57,6 @@ tabs = st.tabs([
 with tabs[0]:
     st.header("Flashcards de Memorización Estratégica")
     st.write("Domina los conceptos clave que componen la base del inglés técnico corporativo.")
-    
-    flashcards_db = [
-        {"category": "Linking Words", "term": "Furthermore / Moreover", "translation": "Además / Es más (Adición formal en informes)"},
-        {"category": "Linking Words", "term": "Nevertheless / Nonetheless", "translation": "No obstante / Sin embargo (Contraste)"},
-        {"category": "Linking Words", "term": "Consequently / Therefore", "translation": "Por consiguiente / Por lo tanto (Causa-Efecto)"},
-        {"category": "Linking Words", "term": "In light of", "translation": "A la luz de / En vista de (Análisis de hallazgos)"},
-        {"category": "Modal Verbs", "term": "Must", "translation": "Obligación estricta / Cumplimiento normativo (IFRS/GAAP)"},
-        {"category": "Modal Verbs", "term": "Should", "translation": "Recomendación / Consejo en control interno"},
-        {"category": "Auxiliary", "term": "Have you finalized...?", "translation": "¿Has finalizado...? (Present Perfect en auditoría)"},
-        {"category": "Core Verbs", "term": "To disclose", "translation": "Revelar / Divulgar información financiera"},
-        {"category": "Core Verbs", "term": "To comply with", "translation": "Cumplir con regulaciones o leyes fiscales"}
-    ]
     
     current_card = flashcards_db[st.session_state.flashcard_idx]
     
@@ -200,7 +204,7 @@ with tabs[4]:
 with tabs[5]:
     st.header("🎯 Simulador de Entrevistas y Examen de Dominio B3+")
     
-    with st.expander("📖 Repaso rápido teóricio antes del examen"):
+    with st.expander("📖 Repaso rápido teórico antes del examen"):
         st.markdown("""
         * **Present Perfect**: Utilizado para hallazgos con impacto actual en los estados financieros.
         * **Linking Words**: Usa *'Therefore'* para causas directas y *'Nevertheless'* para contrastar hallazgos.
