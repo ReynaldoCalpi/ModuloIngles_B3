@@ -1,49 +1,59 @@
 import streamlit as st
 import pandas as pd
 
-# Configuración
-st.set_page_config(page_title="Curso: English for Accountants", layout="wide")
+# Configuración de página
+st.set_page_config(page_title="B3+ Accounting English", layout="wide")
 
-# Estructura de navegación tipo "Learning Path"
-if "unit" not in st.session_state:
-    st.session_state.unit = "Introducción"
+# Inicialización de estado
+if 'progreso' not in st.session_state:
+    st.session_state.progreso = 0
 
-st.sidebar.title("📚 Curso Bilingüe")
-st.sidebar.markdown("---")
-units = ["Introducción", "Unidad 1: Vocabulario Financiero", "Unidad 2: Auditoría y Normas", "Unidad 3: Reportes Corporativos"]
-st.session_state.unit = st.sidebar.radio("Selecciona tu progreso:", units)
+# Título y Bienvenida
+st.title("💼 B3+ English for Accountants & Auditors")
+st.markdown("Plataforma interactiva basada en el curso de Inglés Técnico Contable.")
 
-# Módulo de contenido dinámico
-def show_unit(unit_name):
-    st.header(unit_name)
-    
-    if unit_name == "Introducción":
-        st.write("Bienvenido al curso de Inglés Técnico para Contadores.")
-        st.info("Objetivo: Dominar el 60% del vocabulario crítico para auditorías.")
-        
-    elif unit_name == "Unidad 1: Vocabulario Financiero":
-        st.subheader("Clase: Financial Statements Basics")
-        st.markdown("""
-        * **Income Statement**: Estado de Resultados.
-        * **Balance Sheet**: Balance General.
-        * **Cash Flow**: Flujo de Efectivo.
-        * **To reconcile**: Conciliar.
-        """)
-        if st.checkbox("Marcar Unidad 1 como completada"):
-            st.success("¡Unidad 1 completada!")
+# Definición de las unidades de aprendizaje
+tabs = st.tabs([
+    "📍 1. Vocabulario Esencial", 
+    "📊 2. Estados Financieros", 
+    "🔍 3. Auditoría y Compliance", 
+    "📝 4. Ejercicios & Quiz"
+])
 
-    elif unit_name == "Unidad 2: Auditoría y Normas":
-        st.subheader("Clase: Internal Controls & Compliance")
-        st.write("Verbos esenciales: *To comply*, *To disclose*, *To audit*.")
-        # Aquí insertaremos ejercicios tipo "fill-in-the-blanks" más adelante
-        
-    elif unit_name == "Unidad 3: Reportes Corporativos":
-        st.subheader("Clase: Formal Reporting")
-        st.write("Estructura de conectores para informes: *Furthermore*, *Consequently*, *Nevertheless*.")
+# Unidad 1: Vocabulario
+with tabs[0]:
+    st.header("Módulo 1: Vocabulario Esencial")
+    voc_data = {
+        "Término": ["Assets", "Liabilities", "Equity", "Revenue", "Accrual Accounting"],
+        "Definición": ["Activos", "Pasivos", "Patrimonio", "Ingresos", "Contabilidad por devengo"]
+    }
+    st.table(pd.DataFrame(voc_data))
 
-# Ejecución
-show_unit(st.session_state.unit)
+# Unidad 2: Estados Financieros
+with tabs[1]:
+    st.header("Módulo 2: Estados Financieros")
+    st.markdown("""
+    * **Balance Sheet (Statement of Financial Position)**: La foto financiera a una fecha.
+    * **Income Statement (Profit & Loss)**: El desempeño durante un periodo.
+    * **Cash Flow Statement**: Movimiento de efectivo.
+    """)
 
-# Footer de progreso persistente
-st.sidebar.markdown("---")
-st.sidebar.progress(33) # Esto se calculará dinámicamente según el progreso
+# Unidad 3: Auditoría
+with tabs[2]:
+    st.header("Módulo 3: Auditoría y Normas")
+    st.write("Verbos clave: *To disclose* (revelar), *To reconcile* (conciliar), *To comply* (cumplir).")
+
+# Unidad 4: Quiz interactivo
+with tabs[3]:
+    st.header("Módulo 4: Evaluación de Dominio")
+    pregunta = st.radio("¿Qué significa 'Liabilities'?", ["Activos", "Patrimonio", "Pasivos"])
+    if st.button("Enviar respuesta"):
+        if pregunta == "Pasivos":
+            st.success("Correcto: Pasivos/Obligaciones.")
+            st.session_state.progreso += 25
+        else:
+            st.error("Incorrecto, intenta de nuevo.")
+
+# Sidebar de progreso
+st.sidebar.title("Tu Progreso")
+st.sidebar.progress(st.session_state.progreso)
